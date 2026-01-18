@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Birthday Wish</title>
+    <style>
+        /* IMPORTING 3 DIFFERENT FONTS */
+        @import url('https://fonts.googleapis.com/css2?family=Sacramento&family=Fredoka+One&family=Handlee&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            background: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+
+        /* --- 1. INTRO TEXT (Blur Animation) --- */
+        #intro-text {
+            position: absolute;
+            font-family: 'Sacramento', cursive; /* Font 1 */
+            font-size: 4rem;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            opacity: 0;
+            filter: blur(20px);
+            transition: all 1.5s ease-in-out;
+            z-index: 100;
+            text-align: center;
+            width: 100%;
+        }
+
+        .blur-in { opacity: 1 !important; filter: blur(0px) !important; transform: scale(1); }
+        .fade-out { opacity: 0 !important; filter: blur(10px) !important; transform: scale(1.5); }
+
+        /* --- 2. CORNER PHOTOS --- */
+        .photo-wrapper {
+            position: absolute;
+            width: 40vw; /* 40% of screen width (Good for mobile) */
+            height: 40vw;
+            max-width: 180px; max-height: 180px;
+            padding: 5px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            transform: scale(0); /* Initially Hidden */
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy pop */
+            z-index: 10;
+        }
+
+        .photo-wrapper img {
+            width: 100%; height: 100%;
+            object-fit: cover; border-radius: 5px;
+        }
+
+        /* Positions */
+        .tl { top: 20px; left: 20px; }
+        .tr { top: 20px; right: 20px; }
+        .bl { bottom: 20px; left: 20px; }
+        .br { bottom: 20px; right: 20px; }
+
+        /* Sway Animation (30 degrees total: -15 to 15) */
+        .sway { animation: swayAnim 3s infinite ease-in-out alternate; }
+
+        @keyframes swayAnim {
+            0% { transform: scale(1) rotate(-15deg); }
+            100% { transform: scale(1) rotate(15deg); }
+        }
+
+        /* --- 3. FINAL MESSAGE --- */
+        #final-message {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0); /* Hidden */
+            width: 80%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+            z-index: 20;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid #ff9a9e;
+        }
+
+        #final-message h1 {
+            font-family: 'Fredoka One', cursive; /* Font 2 */
+            color: #ff6f61;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        #final-message p {
+            font-family: 'Handlee', cursive; /* Font 3 */
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .show-message { transform: translate(-50%, -50%) scale(1) !important; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Intro Text -->
+    <div id="intro-text">Happy Birthday!</div>
+
+    <!-- 4 Corner Photos (Replace URLs) -->
+    <div class="photo-wrapper tl" id="p1">
+        <img src="photo1.jpg" alt="Pic1">
+    </div>
+    <div class="photo-wrapper tr" id="p2">
+        <img src="photo2.jpg" alt="Pic2">
+    </div>
+    <div class="photo-wrapper bl" id="p3">
+        <img src="photo3.jpg" alt="Pic3">
+    </div>
+    <div class="photo-wrapper br" id="p4">
+        <img src="photo4.jpg" alt="Pic4">
+    </div>
+
+    <!-- Final Message -->
+    <div id="final-message">
+        <h1>Happy Birthday Name! 🎂</h1>
+        <p>
+            Wishing you a day filled with laughter, love, and everything you enjoy. 
+            You make the world a brighter place just by being in it. 
+            Have the best day ever! ❤️
+        </p>
+    </div>
+
+    <script>
+        const intro = document.getElementById('intro-text');
+        const msg = document.getElementById('final-message');
+        const photos = [
+            document.getElementById('p1'),
+            document.getElementById('p2'),
+            document.getElementById('p3'),
+            document.getElementById('p4')
+        ];
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        window.onload = async () => {
+            // 1. Text Blur In
+            await sleep(500);
+            intro.classList.add('blur-in');
+
+            // 2. Text Fade Out
+            await sleep(2500);
+            intro.classList.remove('blur-in');
+            intro.classList.add('fade-out');
+
+            // 3. Photos Appear One by One
+            // Logic: Appear -> Wait -> Start Swaying
+            
+            await sleep(1000); // Buffer after text
+
+            // Photo 1 (Top Left)
+            photos[0].style.transform = "scale(1) rotate(-5deg)";
+            await sleep(800);
+            photos[0].classList.add('sway');
+
+            // Photo 2 (Top Right)
+            photos[1].style.transform = "scale(1) rotate(5deg)";
+            await sleep(800);
+            photos[1].classList.add('sway');
+
+            // Photo 3 (Bottom Left)
+            photos[2].style.transform = "scale(1) rotate(-5deg)";
+            await sleep(800);
+            photos[2].classList.add('sway');
+
+            // Photo 4 (Bottom Right)
+            photos[3].style.transform = "scale(1) rotate(5deg)";
+            await sleep(800);
+            photos[3].classList.add('sway');
+
+            // 4. Final Message Pops Up
+            await sleep(500);
+            msg.classList.add('show-message');
+        };
+    </script>
+
+</body>
+</html>
